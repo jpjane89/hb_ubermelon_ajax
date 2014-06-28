@@ -3,9 +3,71 @@
 <table class="table table-striped">
     <tr><th>Melon Name</th><th>Quantity</th><th>Price</th><th>Total</th></tr>
     {% for melon, qty in melons %}
-    <tr><td>{{ melon.common_name }}</td><td>{{ qty }}</td><td>{{ melon.price_str() }}</td><td>{{ "$%.2f"%(melon.price * qty) }}</td></tr>
+    <tr><td>{{ melon.common_name }}</td><td><div class= "melon-qty"><a href="" class="btn btn-danger btn-xs">-</a><span class="melon-qty" id="melon-qty-{{melon.id}}" data-melon-id = "{{melon.id}}">{{qty}}</span><a href="" class="btn btn-primary btn-xs">+</a></div></td><td>{{ melon.price_str() }}</td><td><span data-price="{{melon.price}}" id="total-price-{{melon.id}}">{{ "$%.2f"%(melon.price * qty) }}</span></td></tr>
     {% endfor %}
 </table>
-<h3>Total: ${{"%.2f"%total}}</h3>
+<h3 id="total" >Total: $<span>{{"%.2f"%total}}</span></h3>
 <a href="/checkout" class="btn btn-large btn-primary">Check Out</a>
+
+<script type="text/javascript">
+
+// function showQuantity(data) {
+//     var target = $("#qty-target");
+//     target.html(data);
+// }
+
+function increase() {
+    var qtyTarget = $(this).siblings("span");
+    var melon_id = qtyTarget.data("melon-id");
+    var totalTarget = $("span#total-price-"+melon_id);
+
+    $.get("/increase/"+melon_id);
+
+    var new_qty = 1+ parseInt(qtyTarget.text());
+    qtyTarget.text(new_qty);
+
+    var new_total = new_qty * parseFloat(totalTarget.data("price"));
+    totalTarget.text("$"+new_total.toFixed(2));
+
+    var total = $("h3#total")
+    var total_span = $("h3#total>span")
+    var current = parseFloat(total_span.text())
+    var updated_total = current + parseFloat(totalTarget.data("price"));
+    total_span.text(updated_total.toFixed(2));
+    return false;
+}
+
+function decrease() {
+    var qtyTarget = $(this).siblings("span");
+    var melon_id = qtyTarget.data("melon-id");
+    var totalTarget = $("span#total-price-"+melon_id);
+
+    $.get("/decrease/"+melon_id);
+
+    var new_qty = parseInt(qtyTarget.text()) -1;
+    qtyTarget.text(new_qty);
+
+    var new_total = new_qty * parseFloat(totalTarget.data("price"));
+    totalTarget.text("$"+new_total.toFixed(2));
+
+    var total = $("h3#total")
+    var total_span = $("h3#total>span")
+    var current = parseFloat(total_span.text())
+    var updated_total = current - parseFloat(totalTarget.data("price"));
+    total_span.text(updated_total.toFixed(2));
+    return false;
+}
+
+function main() {
+    var increase_button = $("a.btn.btn-primary.btn-xs");
+    increase_button.click(increase);
+    var decrease_button = $("a.btn.btn-danger.btn-xs");
+    decrease_button.click(decrease);
+}
+
+$(main)
+
+</script>
+
+
 {% endblock %}

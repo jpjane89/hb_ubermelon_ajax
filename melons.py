@@ -72,5 +72,27 @@ def checkout():
     flash("Sorry! Checkout will be implemented in a future version of ubermelon.")
     return redirect("/melons")
 
+@app.route('/cart_items')
+def cart_summary():
+    melons = [ (model.get_melon_by_id(int(id)), count) for id, count in session.setdefault("cart", {}).items() ]
+    total = sum([melon[0].price * melon[1] for melon in melons])
+    return render_template('_cart_items.html', melons = melons, total=total)
+
+@app.route('/increase/<int:id>')
+def increase_qty(id):
+    id_str = str(id)
+    cart = session.setdefault("cart", {})
+    qty = cart.get(id_str, 0) + 1
+    cart[id_str] = qty
+    return redirect('/cart')
+
+@app.route('/decrease/<int:id>')
+def decrease_qty(id):
+    id_str = str(id)
+    cart = session.setdefault("cart", {})
+    qty = cart.get(id_str, 0) - 1
+    cart[id_str] = qty
+    return redirect('/cart')
+
 if __name__ == "__main__":
     app.run(debug=True)

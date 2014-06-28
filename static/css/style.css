@@ -76,3 +76,49 @@ img.melon-cart {
     height: 15px;
 }
 
+#blackout-screen {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    background-color: rgba(64, 64, 64, 0.5);
+}
+
+#promotion{
+    width: 600px;
+    position: fixed;
+    border: 3px solid;
+    border-color: #696969;
+    left: 50%;
+    top: 100px;
+    margin-left: -300px;
+}
+
+#promotion>h1 {
+  color: red;
+}
+
+#cart {
+  width: 200px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 10px;
+  position: absolute;
+  top: 50px;
+  right: 75px;
+  background-color: #f3f3f3;
+  display: none;
+}
+
+div.melon-qty {
+  width: 80px;
+}
+
+a.btn.btn-primary.btn-xs {
+  float: right;
+}
+
+span.melon-qty {
+  margin-left: 20%;
+}
